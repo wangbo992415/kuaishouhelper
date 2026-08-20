@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- ========== 权限声明 ========== -->
+    
+    <!-- 无障碍服务（核心权限） -->
+    <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" />
+    
+    <!-- 通知权限（Android 13+） -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    
+    <!-- 振动权限 -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    
+    <!-- 网络权限（LLM 调用） -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    
+    <!-- 前台服务（保持后台运行） -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+
+    <application
+        android:name=".HelperApp"
+        android:label="快手助手"
+        android:icon="@mipmap/ic_launcher"
+        android:allowBackup="true">
+
+        <!-- ========== 无障碍服务注册 ========== -->
+        <service
+            android:name=".KuaishouStateService"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
+
+        <!-- ========== 主 Activity ========== -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="快手助手">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- ========== 悬浮窗 Activity ========== -->
+        <activity
+            android:name=".HelperOverlayActivity"
+            android:theme="@style/Theme.TransparentOverlay"
+            android:launchMode="singleInstance"
+            android:exported="false" />
+
+        <!-- ========== 前台服务 ========== -->
+        <service
+            android:name=".HelperForegroundService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+
+    </application>
+
+</manifest>
